@@ -5,11 +5,11 @@ from ultralytics import YOLO
 # D:\anaconda3\envs\yolov8\Lib\site-packages\ultralytics\nn\modules\conv.py
 # ⬆️ line 40 激活函数
 
-'''
-# Load a model
-model = YOLO('yolov8n-seg.pt')  # pretrained YOLOv8n model
 
-model.train(data='D:\code\yolov8\cfg\\zhuanan_small_huojia.yaml',
+# Load a model
+model = YOLO('D:\code\yolov8_SKU\cfg\custom\yolov8-DySnakeConv_head.yaml')  # pretrained YOLOv8n model
+
+model.train(data='D:\code\yolov8_SKU\cfg\\zhuanan_small_huojia.yaml',
             # pretrained=True,
             # model='D:\yolov8\guaTiao\\best.pt',
             cache=True,
@@ -25,7 +25,7 @@ model.train(data='D:\code\yolov8\cfg\\zhuanan_small_huojia.yaml',
             # fraction=0.2,
             cos_lr=True,
             project='runs/Segment',
-            name='zhuanan_small_huojia',
+            name='zhuanan_small_huojia_DSC',
             save=True,
             save_period=5,
             val=True,
@@ -34,7 +34,6 @@ model.train(data='D:\code\yolov8\cfg\\zhuanan_small_huojia.yaml',
 )
 
 '''
-
 # Load a model
 model = YOLO('yolov8n-seg.pt')  # pretrained YOLOv8n model
 
@@ -62,12 +61,12 @@ model.train(data='D:\code\yolov8\cfg\\zhuanan_small_cengban.yaml',
             conf=0.55,
 )
 
-
-
+'''
+'''
 # Load a model
-model = YOLO('D:\code\yolov8\save_model\guatiao_pretrained_best.pt')  # pretrained YOLOv8n model
+model = YOLO('D:\code\yolov8_SKU\save_model\guatiao_pretrained_best.pt)  # pretrained YOLOv8n model
 
-model.train(data='D:\code\yolov8\cfg\\zhuanan_small_shangpin.yaml',
+model.train(data='D:\code\yolov8_SKU\cfg\\zhuanan_small_shangpin.yaml',
             # pretrained=True,
             # model='D:\yolov8\guaTiao\\best.pt',
             cache=True,
@@ -83,6 +82,7 @@ model.train(data='D:\code\yolov8\cfg\\zhuanan_small_shangpin.yaml',
             # fraction=0.2,
             cos_lr=True,
             project='runs/OBB',
+            # name='zhuanan_small_shangpin',
             name='zhuanan_small_shangpin',
             save=True,
             save_period=5,
@@ -90,3 +90,4 @@ model.train(data='D:\code\yolov8\cfg\\zhuanan_small_shangpin.yaml',
             split='val',
             conf=0.55,
 )
+'''

@@ -3,7 +3,7 @@ from ultralytics import YOLO
 from PIL import Image
 
 # 加载YOLO模型
-model = YOLO(r'D:\code\yolov8\runs\Segment\drink_hobby_seasoning_huojia\weights\best.pt')
+model = YOLO(r'D:\code\yolov8_SKU\runs\OBB\drink_hobby_seasoning_shangpin\weights\last.pt')
 
 # # 指定包含图片的输入目录
 # input_dir = r"D:\code\datasets\aerbeisi\images\val"
@@ -11,7 +11,8 @@ model = YOLO(r'D:\code\yolov8\runs\Segment\drink_hobby_seasoning_huojia\weights\
 # output_dir = r'D:\code\yolov8\val\aerbeisi'
 
 # 对图片运行推理
-results = model(r'D:\code\yolov8\val\烈酒+嗜好+调理')
+results = model(r'D:\code\yolov8_SKU\val\烈酒+嗜好+调理',
+                iou=0.3)
 
 for r in results:
     im_array = r.plot()  # plot a BGR numpy array of predictions
