@@ -1,0 +1,4 @@
+train: D:\code\datasets\weilong\huojia/images/train/
+val: D:\code\datasets\weilong\huojia/images/val/
+nc: 1
+names: ["wlj"]

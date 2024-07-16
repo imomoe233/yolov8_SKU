@@ -1,0 +1,9 @@
+# dataset path
+train: D:\code\datasets\aerbeisi\images\train
+val: D:\code\datasets\aerbeisi\images\val
+ 
+# number of classes
+nc: 2
+ 
+# class names
+names: ['bbt', 'sbbt']

@@ -1,0 +1,9 @@
+# dataset path
+train: D:\code\datasets\zhenbaozhu\images\train
+val: D:\code\datasets\zhenbaozhu\images\val
+ 
+# number of classes
+nc: 5
+ 
+# class names
+names: ['zbzsbgt', 'zbzsb', 'zbzmnbbt', 'qtgt', 'qtsp']

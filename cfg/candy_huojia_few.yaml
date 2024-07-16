@@ -1,0 +1,4 @@
+train: D:\code\datasets\auto_annotation\candy\huojia/images/train/
+val: D:\code\datasets\auto_annotation\candy\huojia/images/val/
+nc: 6
+names: ['tgj', 'bfdclj', 'jnxtgclj', 'dfclj', 'jpclj', 'qt']

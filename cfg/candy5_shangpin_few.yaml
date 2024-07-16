@@ -1,0 +1,4 @@
+train: D:\code\datasets\auto_annotation\candy5\shangpin\images/train/
+val: D:\code\datasets\auto_annotation\candy5\shangpin\images/val/
+nc: 6
+names: ["bqklqq", "jxmcqkl", "xgjxqkl", "jxcqkl", "mcqklqq", "cmwqklqq"]

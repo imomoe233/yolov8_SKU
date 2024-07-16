@@ -1,0 +1,4 @@
+train: D:\code\datasets\shouyin_candy\huojia/images/train/
+val: D:\code\datasets\shouyin_candy\huojia/images/val/
+nc: 2
+names: ['gttgj', 'blkjsj' ]

@@ -1,0 +1,7 @@
+# weilong_shangpin.yaml
+
+# Dataset configuration
+train: D:\code\datasets\drink_hobby_seasoning\cengban\\images\\train\\
+val: D:\code\datasets\drink_hobby_seasoning\cengban\\images\\val\\
+nc: 3
+names: ["cb", 'dgcb', 'hjgxcb']

@@ -1,0 +1,7 @@
+# weilong_shangpin.yaml
+
+# Dataset configuration
+train: D:\code\datasets\zhuanan_small\cengban\\images\\train\\
+val: D:\code\datasets\zhuanan_small\cengban\\images\\val\\
+nc: 1
+names: ["cb"]

@@ -1,0 +1,31 @@
+# dataset path
+train: D:\code\datasets\kebike\images\train
+val: D:\code\datasets\kebike\images\val
+ 
+# number of classes
+nc: 5
+
+# class names
+names: ['kbkgt', 'kbkyw', 'kbklx', 'qtgt', 'qtsp']
+
+parameters:
+  cache: True
+  imgsz: 640
+  epochs: 200
+  batch: 4
+  close_mosaic: 200 # mosaic data augmentation, close it by set the number same as epochs. Too low-level pixal with mosaic will make loss nan!
+  workers: 0
+  device: '0'
+  optimizer: 'auto'
+  # resume=True,
+  amp: False # close amp
+  # fraction=0.2,
+  cos_lr: True
+  project: 'runs/OBB'
+  name: 'kebike'
+  save: True
+  save_period: 5
+  val: True
+  split: 'val'
+  conf: 0.55
+  patience: 20

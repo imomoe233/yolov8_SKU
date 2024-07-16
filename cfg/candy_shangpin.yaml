@@ -1,0 +1,4 @@
+train: D:\code\datasets\candy\shangpin\images/train/
+val: D:\code\datasets\candy\shangpin\images/val/
+nc: 1
+names: ["0"]

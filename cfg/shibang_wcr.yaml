@@ -1,0 +1,9 @@
+# dataset path
+train: D:\code\datasets\shibang_wcr\images\train
+val: D:\code\datasets\shibang_wcr\images\val
+ 
+# number of classes
+nc: 2
+ 
+# class names
+names: ['sbwcrgt', 'sbwcryw']
