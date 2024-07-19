@@ -22,19 +22,26 @@ CLASSES: 标签
 '''
 
 CLASSES = ["0"]
-pic_path = r'D:\code\datasets\auto_annotation\shouyin_candy\shangpin_update'
-huojia_model_path = r'D:\code\yolov8\runs\Segment\shouyin_candy_huojia\weights\best.pt'
-# huojia_model_path = None
-shangpin_model_path = r'D:\code\yolov8\runs\OBB\shouyin_candy_shangpin\weights\best.pt'
+pic_path = r'D:\code\datasets\drink_hobby_seasoning\new_add\2024-07-17_add\xiaoxijia'
+# 有货架则会根据货架来框，不框货架外的物品；无货架则全图框
+# huojia_model_path = r'D:\code\yolov8\runs\Segment\shouyin_candy_huojia\weights\best.pt'
+huojia_model_path = None
+shangpin_model_path = r'D:\code\yolov8_SKU\runs\OBB\drink_hobby_seasoning_shangpin\weights\best.pt'
 
-
+print("rotating image...")
 for image_path_source in os.listdir(pic_path):
-    img_tmp = Image.open(os.path.join(pic_path, image_path_source))
-    # 使用exif_transpose来根据图像的EXIF信息调整图像方向
-    transposed_image = ImageOps.exif_transpose(img_tmp)
-    # 保存图像，设置高质量
-    transposed_image.save(os.path.join(pic_path, image_path_source), "JPEG", quality=98)
-    #print("调整图片方向")
+    try:
+        img_tmp = Image.open(os.path.join(pic_path, image_path_source))
+        # 使用exif_transpose来根据图像的EXIF信息调整图像方向
+        transposed_image = ImageOps.exif_transpose(img_tmp)
+        # 保存图像，设置高质量
+        transposed_image.save(os.path.join(pic_path, image_path_source), "JPEG", quality=98)
+        #print("调整图片方向")
+    except Exception as e:
+        print(f"Error processing image {image_path_source}: {e}")
+        continue
+    
+print("Finish rotate image")
 
 if huojia_model_path is not None:
     huojia_model = YOLO(huojia_model_path)
@@ -60,12 +67,13 @@ def xml_write(rota_p_img, label, AUG_DIR, aug_name, mode = "robndbox"):
         height, width = rota_p_img.shape[0:2]
         floder = AUG_DIR.split('\\')[-1]
         xml_file = open(xml_path, 'w')
-        xml_file.write('<annotation>\n')
+        xml_file.write('<annotation verified="no">\n')
         xml_file.write('    <source>\n')
         xml_file.write('        <database>Unknown</database>\n')
         xml_file.write('    </source>\n')
         xml_file.write('    <folder>' + floder + '</folder>\n')
-        xml_file.write('    <filename>' + str(image_path) + '</filename>\n')
+        xml_file.write('    <filename>' + str(aug_name) + '</filename>\n')
+        xml_file.write('    <path>' + str(image_path) + '</path>\n')
         xml_file.write('    <size>\n')
         xml_file.write('        <width>' + str(width) + '</width>\n')
         xml_file.write('        <height>' + str(height) + '</height>\n')
@@ -133,7 +141,7 @@ def calculate_bounding_box(segment_points):
 # if img.endswith('.jpg') or img.endswith('.png'):
 if huojia_model_path is not None:
     huojia_results = huojia_model(pic_path)
-shangpin_results = shangpin_model(pic_path)
+shangpin_results = shangpin_model(pic_path, iou=0.3, conf=0.3)
 
 for n in range(len(shangpin_results)):
     top_left_list = []
