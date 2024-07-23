@@ -3,7 +3,7 @@ from ultralytics import YOLO
 from PIL import Image
 
 # 加载YOLO模型
-model = YOLO(r'D:\code\yolov8_SKU\runs\OBB\drink_hobby_seasoning_shangpin\weights\best.pt')
+model = YOLO(r'D:\code\yolov8_SKU\runs\OBB\drink_hobby_seasoning_shangpin2\weights\best.pt')
 # model = YOLO(r'D:\code\yolov8_SKU\runs\Segment\drink_hobby_seasoning_huojia\weights\best.pt')
 # # 指定包含图片的输入目录
 # input_dir = r"D:\code\datasets\aerbeisi\images\val"

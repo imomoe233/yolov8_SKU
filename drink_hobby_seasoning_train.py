@@ -3,11 +3,11 @@ from ultralytics import YOLO
 
 
 # 少了个标签 正在重打
-'''
+
 # Load a model
 model = YOLO('yolov8n-seg.pt')  # pretrained YOLOv8n model
 
-model.train(data='D:\code\yolov8\cfg\\drink_hobby_seasoning_huojia.yaml',
+model.train(data='D:\code\yolov8_SKU\cfg\\drink_hobby_seasoning_huojia.yaml',
             # pretrained=True,
             # model='D:\yolov8\guaTiao\\best.pt',
             cache=True,
@@ -35,7 +35,7 @@ model.train(data='D:\code\yolov8\cfg\\drink_hobby_seasoning_huojia.yaml',
 # Load a model
 model = YOLO('yolov8n-seg.pt')  # pretrained YOLOv8n model
 
-model.train(data='D:\code\yolov8\cfg\\drink_hobby_seasoning_cengban.yaml',
+model.train(data='D:\code\yolov8_SKU\cfg\\drink_hobby_seasoning_cengban.yaml',
             # pretrained=True,
             # model='D:\yolov8\guaTiao\\best.pt',
             cache=True,
@@ -62,7 +62,7 @@ model.train(data='D:\code\yolov8\cfg\\drink_hobby_seasoning_cengban.yaml',
 '''
 
 # Load a model
-model = YOLO('D:\code\yolov8_SKU\cfg\custom\yolov8-CA_head_minDetectHead.yaml')  # pretrained YOLOv8n model
+model = YOLO('D:\code\yolov8_SKU\save_model\shangpin_pretrained_best.pt')  # pretrained YOLOv8n model
 
 model.train(data='D:\code\yolov8_SKU\cfg\drink_hobby_seasoning_shangpin.yaml',
             # pretrained=True,
@@ -80,10 +80,11 @@ model.train(data='D:\code\yolov8_SKU\cfg\drink_hobby_seasoning_shangpin.yaml',
             # fraction=0.2,
             cos_lr=True,
             project='runs/OBB',
-            name='drink_hobby_seasoning_shangpin_CA+minDH',
+            name='drink_hobby_seasoning_shangpin',
             save=True,
             save_period=5,
             val=True,
             split='val',
             conf=0.55,
 )
+'''
