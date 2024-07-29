@@ -13,7 +13,7 @@ from ultralytics.utils import LOGGER, TQDM
 # 修改为自己的标签
 cls_list = ["0"]
 # 修改为需要调整的路径，在这个路径下，要求包含.jpg和图片对应的.xml,需要是相同名字，例如A.xml和A.jpg
-data_path = r'D:\code\datasets\drink_hobby_seasoning\xxj'
+data_path = r'D:\code\datasets\sanjia_1'
 
 # 需要调整标签对应的映射
 class_mapping = {
@@ -21,11 +21,8 @@ class_mapping = {
 }
 
 def convert_dota_to_yolo_obb(dota_root_path: str):
-    
-    
-    
+
     dota_root_path = Path(dota_root_path)
-  
 
     def convert_label(image_name, image_width, image_height, orig_label_dir, save_dir, image_path):
         """Converts a single image's DOTA annotation to YOLO OBB format and saves it to a specified directory."""

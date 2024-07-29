@@ -1,0 +1,9 @@
+# dataset path
+train: D:\code\datasets\sanjia\images\train
+val: D:\code\datasets\sanjia\images\val
+ 
+# number of classes
+nc: 1
+ 
+# class names
+names: ['0']
