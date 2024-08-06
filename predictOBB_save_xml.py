@@ -1,7 +1,7 @@
 import glob
 import os
 import shutil
-from PIL import Image,ImageOps
+from PIL import Image,ImageOps,ImageDraw
 import cv2
 import numpy as np
 import tqdm
@@ -22,11 +22,13 @@ CLASSES: 标签
 '''
 
 CLASSES = ["0"]
-pic_path = r'D:\code\datasets\drink_hobby_seasoning\new_add\2024-07-17_add\xiaoxijia'
+pic_path = r'D:\code\datasets\guiqianRYP\cengban\images\val'
 # 有货架则会根据货架来框，不框货架外的物品；无货架则全图框
 # huojia_model_path = r'D:\code\yolov8\runs\Segment\shouyin_candy_huojia\weights\best.pt'
 huojia_model_path = None
-shangpin_model_path = r'D:\code\yolov8_SKU\runs\OBB\drink_hobby_seasoning_shangpin\weights\best.pt'
+#cengban_model_path = None
+cengban_model_path = r'D:\code\yolov8_SKU\runs\Segment\guiqianRYP_cengban\weights\best.pt'
+shangpin_model_path = r'D:\code\yolov8_SKU\runs\OBB\guiqianRYP_shangpin\weights\best.pt'
 
 print("rotating image...")
 for image_path_source in os.listdir(pic_path):
@@ -45,6 +47,8 @@ print("Finish rotate image")
 
 if huojia_model_path is not None:
     huojia_model = YOLO(huojia_model_path)
+if cengban_model_path is not None:
+    cengban_model = YOLO(cengban_model_path)
 shangpin_model = YOLO(shangpin_model_path)
 
 # huojia_results = huojia_model(r'D:\code\datasets\zhuanan_small\shangpin\images\val\f87e2929-c324-4608-866d-61718fe74a3e.jpg')
@@ -66,7 +70,7 @@ def xml_write(rota_p_img, label, AUG_DIR, aug_name, mode = "robndbox"):
     if flag == 1:
         height, width = rota_p_img.shape[0:2]
         floder = AUG_DIR.split('\\')[-1]
-        xml_file = open(xml_path, 'w')
+        xml_file = open(xml_path, 'w', encoding='utf-8')
         xml_file.write('<annotation verified="no">\n')
         xml_file.write('    <source>\n')
         xml_file.write('        <database>Unknown</database>\n')
@@ -141,9 +145,16 @@ def calculate_bounding_box(segment_points):
 # if img.endswith('.jpg') or img.endswith('.png'):
 if huojia_model_path is not None:
     huojia_results = huojia_model(pic_path)
-shangpin_results = shangpin_model(pic_path, iou=0.3, conf=0.3)
+if cengban_model_path is not None:
+    cengban_results = cengban_model(pic_path)
+shangpin_results = shangpin_model(pic_path, iou=0.5)
+
+# 获取文件夹中所有文件的列表并排序
+file_list = sorted(os.listdir(pic_path))
 
 for n in range(len(shangpin_results)):
+    left = [0,0]
+    right = [100000,0]
     top_left_list = []
     bottom_right_list = []
     shangpin_n_cls = []
@@ -158,20 +169,49 @@ for n in range(len(shangpin_results)):
                 # print('boxbox!!' + hj_box)
                 top_left_list.append(top_left)
                 bottom_right_list.append(bottom_right)
-            
+    if cengban_model_path is not None:
+        # 获取zm层板的最高点和最低点
+        zm_height = None
+        # 取出 层板中类别为1的 层板的index，类别为1是'zm'
+        zm_list = (cengban_results[n].boxes.cls == 1.).nonzero(as_tuple=True)[0].tolist()
+        # print(zm_list)
+        # print(cengban_results[n].masks.xy[zm_list[0]][0])
+        if zm_list is not []:
+            for m in zm_list:
+                xy = cengban_results[n].masks.xy[m]
+                # 找到x值最小的两个点
+                min_x_indices = np.argsort(xy[:, 0])[:1]
+                left = xy[min_x_indices][0]
+
+                # 找到x值最大的两个点
+                max_x_indices = np.argsort(xy[:, 0])[-1:]
+                right = xy[max_x_indices][0]
+
+            m = (right[1] - left[1]) / (right[0] - left[0])
+            c = left[1] - m * left[0]
+        
+
+        with Image.open(os.path.join(pic_path, file_list[n])) as img:
+            draw = ImageDraw.Draw(img)
+            # 绘制直线
+            # print([(left[0], left[1]), (right[0], right[1])])
+            draw.line([(left[0], left[1]), (right[0], right[1])], fill='red', width=10)
+            #img.show()
+            img.save(os.path.join(pic_path, file_list[n][:-4]+'_zm_line.jpg'))
     try:
         shangpin_xyxy = shangpin_results[n].obb.xyxy.tolist()
         shangpin_xywhr = shangpin_results[n].obb.xywhr.tolist()
     except:
         print("looks no identity in shangpin_results")
+        # continue
     result = []
 
     if huojia_model_path is not None:
         for i in range(len(shangpin_xyxy)):
             sp_box_temp = shangpin_xyxy[i]
             sp_box = [0, 0] # 保存box中心位置
-            sp_box[1] = ((sp_box_temp[2] - sp_box_temp[0]) / 2.0) + sp_box_temp[0]
-            sp_box[0] = ((sp_box_temp[3] - sp_box_temp[1]) / 2.0) + sp_box_temp[1]
+            sp_box[0] = ((sp_box_temp[2] - sp_box_temp[0]) / 2.0) + sp_box_temp[0]
+            sp_box[1] = ((sp_box_temp[3] - sp_box_temp[1]) / 2.0) + sp_box_temp[1]
             # print(sp_box)
             # result.append(shangpin_xywhr[i])
             
@@ -179,13 +219,46 @@ for n in range(len(shangpin_results)):
                 top_left = top_left_list[j]
                 bottom_right = bottom_right_list[j]
                 # 如果当前商品中心点在货架外接矩阵中
-                if top_left[1] < sp_box[0] < bottom_right[1] and top_left[0] < sp_box[1] < bottom_right[0]:
+                if top_left[1] < sp_box[1] < bottom_right[1] and top_left[0] < sp_box[0] < bottom_right[0]:
                     result.append(shangpin_xywhr[i])
                     #shangpin_n_cls.append(int(shangpin_results[n][i].obb.cls[0].tolist()))
                     cls_list.append(int(shangpin_results[n][i].obb.cls[0].tolist()))
                 # 如果当前商品中心点不在货架外接矩阵中，则，下一个商品
                 else:
                     continue
+    '''            
+    else:
+        for i in range(len(shangpin_xyxy)):
+            result.append(shangpin_xywhr[i])
+            #shangpin_n_cls.append(int(shangpin_results[n][i].obb.cls[0].tolist()))
+            cls_list.append(int(shangpin_results[n][i].obb.cls[0].tolist()))
+    '''        
+    if cengban_model_path is not None:
+        for i in range(len(shangpin_xyxy)):
+            sp_box_temp = shangpin_xyxy[i]
+            sp_box = [0, 0] # 保存box中心位置
+            sp_box[0] = ((sp_box_temp[2] - sp_box_temp[0]) / 2.0) + sp_box_temp[0]
+            sp_box[1] = ((sp_box_temp[3] - sp_box_temp[1]) / 2.0) + sp_box_temp[1]
+
+            
+            y_on_line = m * sp_box[0] + c
+
+            # 判断sp_box在直线的上方还是下方
+            if (zm_list is not []) and (sp_box[1] > y_on_line):
+            # if sp_box[0] > max_y:
+                #print("sp_box is below the line")
+                result.append(shangpin_xywhr[i])
+                #shangpin_n_cls.append(int(shangpin_results[n][i].obb.cls[0].tolist()))
+                cls_list.append(int(shangpin_results[n][i].obb.cls[0].tolist()))
+            # 如果当前商品中心点不在货架外接矩阵中，则，下一个商品
+            elif zm_list is []:
+                result.append(shangpin_xywhr[i])
+                cls_list.append(int(shangpin_results[n][i].obb.cls[0].tolist()))
+            elif (zm_list is not []) and (sp_box[1] < y_on_line): 
+                continue
+            else:
+                pass
+
     else:
         for i in range(len(shangpin_xyxy)):
             result.append(shangpin_xywhr[i])

@@ -1,0 +1,9 @@
+# dataset path
+train: D:\code\datasets\guiqianRYP\shangpin\images\train
+val: D:\code\datasets\guiqianRYP\shangpin\images\val
+ 
+# number of classes
+nc: 1
+ 
+# class names
+names: ['0']

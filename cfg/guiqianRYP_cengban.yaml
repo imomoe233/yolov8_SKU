@@ -1,0 +1,9 @@
+# dataset path
+train: D:\code\datasets\guiqianRYP\images\train
+val: D:\code\datasets\guiqianRYP\images\val
+ 
+# number of classes
+nc: 2
+ 
+# class names
+names: ['cb', 'zm']

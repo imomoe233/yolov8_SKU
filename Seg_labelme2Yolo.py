@@ -4,10 +4,10 @@ import subprocess
 
 
 # Define paths
-data_path = r'D:\code\datasets\drink_hobby_seasoning\bantai\huojia'
+data_path = r'D:\code\datasets\guiqianRYP'
 
 #jdclj
-label_list = 'shtllj,shpjykj,ljbllj,ljyklj,ljhjzj,shpqt' 
+label_list = 'cb,zm' 
 
 # 获取文件夹中所有文件
 files = os.listdir(data_path)
